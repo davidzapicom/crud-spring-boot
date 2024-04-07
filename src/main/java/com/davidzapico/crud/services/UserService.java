@@ -1,10 +1,9 @@
 package com.davidzapico.crud.services;
 
 import java.util.ArrayList;
-
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.davidzapico.crud.models.UserModel;
 import com.davidzapico.crud.repositories.IUserRepository;
 
@@ -18,16 +17,30 @@ public class UserService {
         return (ArrayList<UserModel>) userRepository.findAll();
     }
 
-    public void findUser() {
-        
+    public Optional<UserModel> getUserById(Long id) {
+        return this.userRepository.findById(id);
     }
 
-    public void updateUser() {
-        userRepository.save(null);
+    public UserModel saveUser(UserModel user) {
+        return this.userRepository.save(user);
     }
 
-    public void deleteUser() {
-        userRepository.delete(null);
+    public UserModel updateUser(UserModel request, Long id) {
+        UserModel user = this.userRepository.findById(id).get();
+
+        user.setName(request.getName());
+        user.setLastName(request.getLastName());
+
+        return user;
     }
-    
+
+    public Boolean deleteUser(Long id) {
+        try {
+            this.userRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }
